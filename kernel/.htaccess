@@ -1,0 +1,25 @@
+<Files ".htaccess">
+deny from all
+</Files>
+addDefaultCharset utf-8
+#ErrorDocument 404 /content/error.php
+
+<IfModule mod_rewrite.c>
+	Options +FollowSymlinks
+	RewriteEngine On
+	RewriteBase /
+
+	RewriteCond %{HTTPS} !=on
+	RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+	RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
+	
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_URI} !example.php
+	RewriteCond %{REQUEST_URI} !(.*)/$
+	RewriteRule ^(.*[^/])$ $1/ [L,R=301]
+
+	RewriteRule ^([a-z0-9]+)(/)$ index.php?act=$1 [NC]
+	RewriteRule ^([a-z0-9]+)/([a-z0-9]+)(/)$ index.php?act=$1&do=$2 [NC]
+	RewriteRule ^ajax/([-_a-z0-9]+).json(/)$ index.php?act=ajax&do=$1 [NC]
+	RewriteRule ^([a-z0-9]+)/([a-z0-9]+)/([0-9]+)(/)$ index.php?act=$1&do=$2&id=$3 [NC]
+</IfModule>
